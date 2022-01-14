@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+
+<title>Lat & Long Viewer</title>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"></script>
+<link href="https://fonts.googleapis.com/css?family=Lato|Oswald" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Nunito+Sans:wght@300;400;600;700;800;900&family=Poppins:wght@200;300;400&family=Quicksand:wght@400;506&display=swap" rel="stylesheet">
+  <!--========== BOX ICONS ==========-->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
+<!-- bootstrap  -->
+
+
+
+<style>
+    *{
+        font-family: 'Montserrat', sans-serif;
+    }
+html, body {
+    height: 100%;
+    width: 100%;
+}
+
+#map {
+    height: 100%;
+    width: 100%;
+    /* background-color: #90cccb; */
+}
+body {
+    padding: 0;
+    margin: 0;
+    font-size: 16px;
+    font-family: 'Lato', sans-serif;
+}
+
+#top-bar {
+    position: absolute;
+    top:0;
+    left: 0;
+    width: 100%;
+    height: 16px;
+    background-color: rgba(255, 255, 255,0.3);
+    z-index: 900;
+    border-bottom: 1px solid rgba(72, 55, 89,0.3);
+}
+
+.leaflet-left .leaflet-control {
+    margin-left: 0;
+}
+.leaflet-left {
+    left: 10px;
+}
+.leaflet-top{
+    top:36px;
+}
+
+.leaflet-top .leaflet-control {
+    margin-top: 0px;
+}
+
+.leaflet-touch .leaflet-control-layers, .leaflet-touch .leaflet-bar {
+    border: 5px solid rgba(255, 255, 255,0.3);
+    background-clip: padding-box;
+}
+.leaflet-bar {
+    box-shadow: 0 1px 5px rgba(0,0,0,0.65);
+    border-radius: 0px;
+    
+}
+
+.leaflet-bar a, .leaflet-bar a:hover {
+    color: #483759;
+}
+
+.leaflet-top, .leaflet-bottom {
+    border: 1px solid rgba(72, 55, 89,0.3);
+}
+
+
+.leaflet-tooltip-pane .text {
+  color: rgba(72, 55, 89,1); 
+  font-weight: bold;
+  background: transparent;
+  border:0;
+  box-shadow: none;
+  font-size:1em;
+}
+
+#menu-wraper {
+    position: absolute;
+    bottom: 16em;
+    right: 0;
+    z-index: 900;
+    width:27%;
+    height:50%;
+    border-top: 1px solid rgba(72, 55, 89,0.3);
+    border-left: 1px solid rgba(72, 55, 89,0.3);
+    box-shadow: 0 1px 5px rgb(0 0 0 / 65%);
+    background-color: #fff;
+    border-radius: .5em;
+}
+
+
+#menu{
+    /* background-color: rgba(255, 255, 255,0.3); */
+    /* padding: 32px; */
+    box-sizing:border-box;
+    width:100%;
+   
+    height:100%;
+    float: right;
+}
+#formMarkers{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+.float-items {
+padding: 5px;
+/* float:left; */
+}
+/* #close-menu {
+    position: absolute;
+    z-index: 900;
+    right: 13px !important;
+    bottom: 93% !important;
+    color: red;
+    font-weight: 900;
+    font-size: 1.6em;
+    cursor: pointer;
+    font-family: 'Montserrat', sans-serif;
+   
+    
+} */
+.close-menu{
+    /* position: absolute;
+    z-index: 900;
+    right: 18px !important;
+    bottom: 46% !important;
+    color: red; */
+    /* font-weight: 900;
+    font-size: .8em; */
+    cursor: pointer;
+}
+
+#open-menu-wraper {
+    /* border: 1px solid #4837594d; */
+    position: absolute;
+    z-index: 900;
+    right: 0px;
+    bottom: 25%;
+}
+
+#open-menu {
+    color: #483759;
+    font-weight: 900;
+    cursor: pointer;
+    font-family: 'Montserrat', sans-serif;
+    padding: 0px 3px 1px 3px;
+    background-color: rgba(255, 255, 255,0.6);
+    border: 6px solid rgba(255, 255, 255,0.8);
+    font-size: 2em;
+    border-radius: 11px
+    
+}
+
+#menu-content {
+    /* background-color: rgba(255, 255, 255,0.8); */
+    height: 100%;
+    width:100%;
+    overflow: auto;
+    color: #483759; 
+   
+}
+
+
+
+#div2 li {
+    list-style-type: none;
+}
+
+#div1 {
+    background-color: transparent;
+    padding: .5em;
+    display: grid;
+    grid-template-columns: 10em 10em;
+    gap: 1em;
+}
+
+#div2-wraper {
+    font-size: 1em;
+    font-weight: 600;
+    color: black;
+}
+#div2-wraper li{
+    margin: 8px;
+}
+#div2-wraper input{
+    padding: 5px 3px !important;
+    text-align: center;
+    font-weight: 500;
+    font-family: 'Poppins', sans-serif !important;
+    border: 2px dotted lightgrey;
+    border-radius: 7px;
+}
+/* #div2 {
+    padding: 6px 10px 0px 20px;
+} */
+/* #div3 {
+    background-color: rgb(200, 255, 0);
+} */
+
+#remove-markers, #export-markers, #export-geojson {
+    cursor: pointer;
+   
+}
+
+
+@media (max-width:700px){
+    body, #menu-content, #div2 {
+        font-size: 0.7em;
+    }
+    #div1 {
+        background-color: transparent;
+        padding: 0px 6px 0px 6px;
+    }
+    #remove-markers, #export-markers {
+        padding: 12px 0px 6px 0px;
+    }
+    #close-menu {
+        font-size: 1.6em;
+    }
+    #menu-wraper {
+        height:40%;
+        border-left: none;
+        width: 100%;
+    }
+    #open-menu-wraper {
+        bottom: 35%;
+    }
+    #menu{
+        width:100%;
+        height:100%;
+        float: none;
+    }
+    #div2-wraper {
+        font-size: 1.9em;
+    }   
+
+}
+.formBlock {
+    max-width: 300px;
+    background-color: #FFF;
+    border: 1px solid #ddd;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    padding: 10px;
+    z-index: 999;
+    box-shadow: 0 1px 5px rgba(0,0,0,0.65);
+    border-radius: 5px;
+    width: 100%;
+}
+
+.leaflet-top .leaflet-control {
+    /* margin-top: 130px; */
+    border: none !important;
+}
+/* .leaflet-top, .leaflet-bottom {
+    border: 1px solid rgba(72, 55, 89,0.3);
+} */
+.leaflet-top {
+    top: 150px;
+}
+
+.input {
+    padding: .4em;
+    width: 90%;
+    border: 2px dotted #ccc;
+    font-size: 1em;
+    font-weight: 600;
+    border-radius: 3px;
+    margin: .5em;
+
+}
+
+#form {
+    padding: 0;
+    margin: 0;
+}
+input:nth-child(1) {
+    margin-bottom: 10px;
+}
+/* div input {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  box-sizing: border-box;
+} */
+
+button{
+    display: inline-block;
+    background-color: darkcyan;
+    color: #fff;
+    padding: 1em 1em;
+    border-radius: .5rem;
+    font-weight: 600;
+    outline: none;
+    border: none;
+    font-family: 'Quicksand', sans-serif;
+}
+button:hover{
+    background-color: #C42130;
+}
+button#submit{
+    display: block;
+    margin: auto;
+}
+
+</style>
+
+<body>
+
+    <div id="map"></div>
+    
+
+
+    <div id="menu-wraper">
+       
+        <div id="menu">
+            <div id="menu-content">
+                 <!-- <div class="formBlock"> -->
+            <form id="form" action="/receive_form" method="post">
+                <input type="text" name="startpoint" class="input" id="startpoint" size=12 value="" placeholder="start point">
+                <input type="text" name="endpoint" class="input" id="endpoint" size=12 value="" placeholder="End point">
+                <button id="submit" type="submit" value="submit">Submit</button>
+                
+            </form>
+        <!-- </div> -->
+
+                <div class="float-items" id="div1">
+                    <button type="submit" id="export-markers">Download CSV</button>
+                    <button type="submit" id="export-geojson">Download GeoJSON</button>
+                    <button type="submit" id="remove-markers">Remove Markers</button>
+                    <button id="close-menu" class="close-menu" type="submit">Close</button>
+                 
+                  
+                </div>
+                <div class="float-items" id="div2-wraper">
+                    <div id="div2">
+                        <form id="formMarkers"></form>
+                    </div>
+                </div>
+                <div class="float-items" id="div3"></div>
+            </div>
+
+            <div>
+               
+            </div>
+        </div>
+    </div>
+    <div id="open-menu-wraper">
+        <div id="open-menu" title="Open menu"><i class='bx bx-chevrons-left'></i></div>
+    </div>
+
+
+<script>
+    var buttonRemoveMarkers = document.getElementById("remove-markers");
+    var buttomExportMarkers = document.getElementById("export-markers");
+    var buttomExportGeoJason = document.getElementById("export-geojson");
+    var menuDiv = document.getElementById('menu-wraper');
+    var closeMenu = document.getElementById('close-menu');
+    var openMenu = document.getElementById('open-menu');
+    var menuList = document.getElementById('formMarkers');
+
+    var markerCounter = 0;
+    var markers = new L.FeatureGroup();
+    var texts = new L.FeatureGroup();
+    var map = L.map('map', {
+    minZoom: 2,
+    maxZoom: 15,
+    zoomControl: false
+    });
+    L.control.zoom({
+    position: 'topleft'
+    }).addTo(map);
+  
+    map.setView([0, 0], 2);
+	
+	document.getElementById("submit").onclick = function (e) {
+		e.preventDefault();
+		
+		fetch("/receive_form", {
+			method: "POST",
+			body: JSON.stringify({
+				"startpoint": document.getElementById("startpoint").value,
+				"endpoint": document.getElementById("endpoint").value
+			}),
+			headers: {
+				"Content-Type": "application/json"
+			}
+		}).then(function (response) {
+			response.json().then(data => {
+				var polyline = L.polyline(data, {color: 'red'}).addTo(map);
+			});
+		});
+		
+	}
+	
+    
+    
+    var OpenStreetMap_HOT = L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png', {
+	maxZoom: 20,
+	attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
+});
+
+    
+    map.on("click", (event) => {
+     console.log(event)
+   
+    var lat = event.latlng.lat;
+    var lon = event.latlng.lng;
+    var czoom = map.getZoom();
+    // if(czoom < 18) { nzoom = czoom; + 1}
+    if(czoom < 18) { nzoom = czoom;} 
+    if(nzoom > 18) { nzoom = 18; }
+    if(czoom != 18) { map.setView([lat,lon], nzoom); } else { map.setView([lat,lon]); }
+    if(document.getElementById('startpoint').value === null || document.getElementById('startpoint').value === '') {
+        document.getElementById('startpoint').value =`${lon},${lat}`;
+    } else {
+        document.getElementById('endpoint').value = `${lon},${lat}`;
+    }
+})
+   
+   
+    var jsonForCSV = [];
+
+    var geoJSON = {
+        "type": "FeatureCollection",
+        "crs":{"type":"name","properties":{"name":"EPSG:4326"}},
+        "features": []
+    };
+
+    OpenStreetMap_HOT.addTo(map);
+
+    markers.addTo(map);
+    texts.addTo(map);
+
+    function onMapClick(e) {
+       markerCounter += 1;
+       var greenIcon = new L.Icon({
+            iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-black.png',
+            shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+            iconSize: [25, 41],
+            iconAnchor: [12, 41],
+            popupAnchor: [1, -34],
+            shadowSize: [41, 41]
+            });
+
+    //    marker = L.marker([e.latlng.lat,e.latlng.lng], {icon: greenIcon});
+    marker =  L.circleMarker([e.latlng.lat.toFixed(2),e.latlng.lng.toFixed(2)],{icon: greenIcon});
+
+       markers.addLayer(marker);
+
+       var text = L.tooltip({
+            permanent: true,
+            direction: 'center',
+            className: 'text'
+        })
+        .setContent('' + markerCounter)
+        .setLatLng(marker.getLatLng());
+
+        text.addTo(texts);
+        
+        // add text to menu
+         addPointToContentList(e.latlng.lat.toFixed(2),e.latlng.lng.toFixed(2));
+        // show menu
+        if(menuDiv.style.display === "none") {
+            menuDiv.style.display = "block";
+            openMenu.style.display = "none";
+        };
+        
+        var1= jsonForCSV.push({
+            OBJECTID: markerCounter,
+            Y: e.latlng.lat.toFixed(2),
+            X: e.latlng.lng.toFixed(2),
+            Latitude: e.latlng.lat.toFixed(2),
+            Longitude: e.latlng.lng.toFixed(2)
+        });
+        console.log(var1);
+
+        var2= geoJSON.features.push({
+            "type": "Feature",
+            "properties": {},
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    e.latlng.lng,
+                    e.latlng.lat
+                ]
+            }
+        });
+        console.log(var2);
+
+    };
+
+    function addPointToContentList(lat,long) {
+
+        var newDiv = document.createElement("div");
+        var newLiPoint = document.createElement("li");
+        // newLiPoint.innerHTML = '<b>' + markerCounter + " - Point </b>";
+
+        var input = document.createElement("input");
+        input.setAttribute('type', 'text', 'name', 'value');
+        input.name = 'Desc'+ markerCounter;
+        input.value = 'Point ' + markerCounter;
+
+        var newLiLat = document.createElement("li");
+        newLiLat.innerHTML = "Latitude: " + lat;
+
+        var newLiLong = document.createElement("li");
+        newLiLong.innerHTML = 'Longitude: ' + long; 
+
+        var breakLine = document.createElement("br");
+        
+        newDiv.appendChild(newLiPoint);
+        newDiv.appendChild(input);
+        newDiv.appendChild(newLiLat);
+        newDiv.appendChild(newLiLong);
+        newDiv.appendChild(breakLine);
+
+        menuList.appendChild(newDiv);
+    }
+
+    // hide menu
+    menuDiv.style.display = "none";
+    // assigning events 
+    map.on('click', onMapClick);
+    buttonRemoveMarkers.addEventListener('click', removeMarkers);
+    buttomExportMarkers.addEventListener('click', saveMarkersToCSV);
+    // var buttomExportGeoJason = document.getElementById("export-geojson");
+    buttomExportGeoJason.addEventListener('click', saveMarkersToGeoJson)
+    closeMenu.addEventListener('click', closeMenuPanel);
+    openMenu.addEventListener('click', openMenuPanel);
+
+    function removeMarkers() {
+        // clear input fields
+        document.getElementById(
+             'startpoint').value = '';
+        document.getElementById(
+             'endpoint').value = '';
+        // removee markers
+        markers.eachLayer(function (layer) {
+            markers.removeLayer(layer);
+        });
+        // removes labels
+        texts.eachLayer(function (layer) {
+           texts.removeLayer(layer);
+        });
+        markerCounter = 0;
+        // removes text from content list
+        menuList.innerHTML = '';
+        jsonForCSV = [];
+        geoJSON = {};
+    };
+
+    function saveMarkersToCSV() {
+
+        var formElement = document.forms.formMarkers;
+
+        for ( var i = 0; i < formElement.elements.length; i++ ) {
+            var e = formElement.elements[i];
+            jsonForCSV[i].Point = e.value;
+        };
+
+        const csvData = objectToCsv(jsonForCSV);
+        downloadCSV(csvData);
+    };
+
+    function saveMarkersToGeoJson() {
+        var formElement = document.forms.formMarkers;
+        var lista = [];
+        for ( var i = 0; i < formElement.elements.length; i++ ) {
+            var e = formElement.elements[i];
+            geoJSON.features[i].properties.name = e.value;
+        };
+        
+        downloadGeoJSON(geoJSON);
+
+    };
+
+    function closeMenuPanel() {
+        menuDiv.style.display = "none";
+        openMenu.style.display = "block";
+    };
+
+    function openMenuPanel() {
+        openMenu.style.display = "none";
+        menuDiv.style.display = "block";
+        
+    };
+
+    function objectToCsv (data) {
+
+        var csvRows = [];
+        var headers = Object.keys(data[0]);
+        csvRows.push(headers.join(','));
+        for(const row of data) {
+            const values = headers.map(header => {
+                const escaped = ('' + row[header]).replace(/"/g, '\\"');
+                return '"' + escaped + '"';
+            });  
+            csvRows.push(values.join(','));
+        };
+
+        return csvRows.join('\n');
+    };
+
+    function downloadCSV (data) {
+        var blob = new Blob([data], {type: 'text/csv'});
+        var url = window.URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.setAttribute('hidden', '');
+        a.setAttribute('href', url);
+        a.setAttribute('download', 'downloaded.csv');
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    };
+
+    function downloadGeoJSON(data) {
+        var objectToString = JSON.stringify(data);
+        var blob = new Blob([objectToString], {type: 'text/plain'});
+        var url = window.URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.setAttribute('hidden', '');
+        a.setAttribute('href', url);
+        a.setAttribute('download', 'downloaded.geojson');
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    };
+
+   
+    
+</script>
+</body>
+</html>
+
