@@ -93,11 +93,9 @@ body {
 
 #menu-wraper {
     position: absolute;
-    bottom: 16em;
-    right: 0;
+    bottom: 25px;
+    right: 10px;
     z-index: 900;
-    width:27%;
-    height:50%;
     border-top: 1px solid rgba(72, 55, 89,0.3);
     border-left: 1px solid rgba(72, 55, 89,0.3);
     box-shadow: 0 1px 5px rgb(0 0 0 / 65%);
@@ -111,8 +109,6 @@ body {
     /* padding: 32px; */
     box-sizing:border-box;
     width:100%;
-   
-    height:100%;
     float: right;
 }
 #formMarkers{
@@ -151,18 +147,20 @@ padding: 5px;
 #open-menu-wraper {
     /* border: 1px solid #4837594d; */
     position: absolute;
+    
     z-index: 900;
-    right: 0px;
-    bottom: 25%;
+    right: -8px;
+    bottom: 20%;
 }
 
 #open-menu {
+    display: grid;
     color: #483759;
     font-weight: 900;
     cursor: pointer;
     font-family: 'Montserrat', sans-serif;
     padding: 0px 3px 1px 3px;
-    background-color: rgba(255, 255, 255,0.6);
+    background-color: rgba(230, 233, 235);
     border: 6px solid rgba(255, 255, 255,0.8);
     font-size: 2em;
     border-radius: 11px
@@ -171,7 +169,6 @@ padding: 5px;
 
 #menu-content {
     /* background-color: rgba(255, 255, 255,0.8); */
-    height: 100%;
     width:100%;
     overflow: auto;
     color: #483759; 
@@ -188,7 +185,7 @@ padding: 5px;
     background-color: transparent;
     padding: .5em;
     display: grid;
-    grid-template-columns: 10em 10em;
+    grid-template-columns: 1fr 1fr;
     gap: 1em;
 }
 
@@ -221,38 +218,7 @@ padding: 5px;
 }
 
 
-@media (max-width:700px){
-    body, #menu-content, #div2 {
-        font-size: 0.7em;
-    }
-    #div1 {
-        background-color: transparent;
-        padding: 0px 6px 0px 6px;
-    }
-    #remove-markers, #export-markers {
-        padding: 12px 0px 6px 0px;
-    }
-    #close-menu {
-        font-size: 1.6em;
-    }
-    #menu-wraper {
-        height:40%;
-        border-left: none;
-        width: 100%;
-    }
-    #open-menu-wraper {
-        bottom: 35%;
-    }
-    #menu{
-        width:100%;
-        height:100%;
-        float: none;
-    }
-    #div2-wraper {
-        font-size: 1.9em;
-    }   
 
-}
 .formBlock {
     max-width: 300px;
     background-color: #FFF;
@@ -313,6 +279,7 @@ button{
     outline: none;
     border: none;
     font-family: 'Quicksand', sans-serif;
+    cursor: pointer;
 }
 button:hover{
     background-color: #C42130;
@@ -320,6 +287,44 @@ button:hover{
 button#submit{
     display: block;
     margin: auto;
+}
+
+@media (max-width:500px){
+    body, #menu-content, #div2 {
+        font-size: 0.7em;
+    }
+    #div1 {
+        background-color: transparent;
+        padding: 10px;
+    }
+    #remove-markers, #export-markers {
+        padding: 12px 0px 6px 0px;
+    }
+    #close-menu {
+        font-size: 1.6em;
+    }
+    #menu-wraper {
+        width: 100%;
+        right: 0;
+        bottom: 32px;
+        
+    }
+
+    .input {
+        width: 95%;
+    }
+    #open-menu-wraper {
+        bottom: 35%;
+    }
+    #menu{
+        width:100%;
+        height:100%;
+        float: none;
+    }
+    #div2-wraper {
+        font-size: 1.9em;
+    }   
+
 }
 
 </style>
@@ -596,7 +601,7 @@ button#submit{
 
     function closeMenuPanel() {
         menuDiv.style.display = "none";
-        openMenu.style.display = "block";
+        openMenu.style.display = "grid";
     };
 
     function openMenuPanel() {
